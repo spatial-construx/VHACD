@@ -14,7 +14,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -G "Visual Studio 16 2019 Win64" ../src
+        cmake -G "Visual Studio 16 2019" ../src
     - name: build
       run: cmake --build build --config Debug
     - name: upload build
