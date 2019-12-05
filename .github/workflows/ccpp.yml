@@ -10,6 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: ilammy/msvc-dev-cmd@v1.0.0
+      
     - name: configure
       run: |
         mkdir build
@@ -17,9 +18,32 @@ jobs:
         cmake -G "Visual Studio 16 2019" ../src
     - name: build
       run: cmake --build build --config Debug
-    - name: release
-      uses: softprops/action-gh-release@v0.1.0
+      
+    - name: make release
+      uses: actions/create-release@v1.0.0
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         name: Windows x64
         draft: true
-        files: build/dll/Debug/libvhacd.dll, build/dll/Debug/libvhacd.pdb
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+
+    - name: upload dll
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./build/dll/Debug/libvhacd.dll
+        asset_name: libvhacd.dll
+
+    - name: upload pdb
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./build/dll/Debug/libvhacd.pdb
+        asset_name: libvhacd.pdb
