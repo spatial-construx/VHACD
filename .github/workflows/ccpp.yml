@@ -10,5 +10,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: ilammy/msvc-dev-cmd@v1.0.0
-    - name: cmake
-      run: cmake -G "Visual Studio 16 2019" src
+    - name: configure
+      run: mkdir build && cd build && cmake -G "Visual Studio 16 2019 Win64" ../src
+    - name: build
+      run: cmake --build build --config Debug
+    - name: upload build
+      uses: actions/upload-artifact@v1
+      with:
+        name: bin
+        path: build/dll/Debug
+
