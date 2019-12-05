@@ -1,6 +1,8 @@
 name: C/C++ CI
 
-on: []
+on:
+  check_run:
+    types: [rerequested, requested_action]
 
 jobs:
   build:
