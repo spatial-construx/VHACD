@@ -9,4 +9,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - uses: lpenz/ghaction-cmake@v0.1
+    - uses: ilammy/msvc-dev-cmd@v1.0.0
+    - name: cmake?
+      run: cmake -G Visual Studio 15 2017
