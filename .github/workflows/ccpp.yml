@@ -17,9 +17,9 @@ jobs:
         cmake -G "Visual Studio 16 2019" ../src
     - name: build
       run: cmake --build build --config Debug
-    - name: upload build
-      uses: actions/upload-artifact@v1
+    - name: release
+      uses: softprops/action-gh-release@v0.1.0
       with:
-        name: bin
-        path: build/dll/Debug
-
+        name: Windows x64
+        draft: true
+        files: build/dll/Debug/libvhacd.dll, build/dll/Debug/libvhacd.pdb
