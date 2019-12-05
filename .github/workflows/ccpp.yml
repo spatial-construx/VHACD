@@ -19,6 +19,14 @@ jobs:
     - name: build
       run: cmake --build build --config Debug
       
+    - name: archive build
+      run: |
+        mkdir build/VHACD
+        cp build/dll/Debug/libvhacd.dll build/VHACD/libvhacd.dll
+        cp build/dll/Debug/libvhacd.pdb build/VHACD/libvhacd.pdb
+        cp src/dll/*.cs build/VHACD/*.cs
+        jar -cMf build/windows-x64.zip build/VHACD
+      
     - name: make release
       uses: actions/create-release@v1.0.0
       id: create_release
@@ -29,22 +37,12 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
 
-    - name: upload dll
+    - name: upload zip
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./build/dll/Debug/libvhacd.dll
+        asset_path: ./build/windows-x64.zip
         asset_name: libvhacd.dll
-        asset_content_type: application/octet-stream
-
-    - name: upload pdb
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./build/dll/Debug/libvhacd.pdb
-        asset_name: libvhacd.pdb
-        asset_content_type: application/octet-stream
+        asset_content_type: application/zip
