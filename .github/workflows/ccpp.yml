@@ -24,7 +24,7 @@ jobs:
         mkdir build/VHACD
         cp build/dll/Debug/libvhacd.dll build/VHACD/libvhacd.dll
         cp build/dll/Debug/libvhacd.pdb build/VHACD/libvhacd.pdb
-        cp src/dll/*.cs build/VHACD/*.cs
+        cp src/dll/VHACD.cs build/VHACD/VHACD.cs
         jar -cMf build/windows-x64.zip build/VHACD
       
     - name: make release
