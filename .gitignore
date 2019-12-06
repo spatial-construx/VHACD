@@ -129,3 +129,4 @@ src/.vs
 */.vs
 src/VHACD_Lib/.vs
 src/vc140.pdb
+CMakeFiles
