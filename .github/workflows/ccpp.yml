@@ -25,7 +25,10 @@ jobs:
         cp build/dll/Debug/libvhacd.dll build/VHACD/libvhacd.dll
         cp build/dll/Debug/libvhacd.pdb build/VHACD/libvhacd.pdb
         cp src/dll/VHACD.cs build/VHACD/VHACD.cs
-        jar -cMf build/windows-x64.zip build/VHACD
+        cp src/dll/vhacd.asmdef build/VHACD/vhacd.asmdef
+        cp src/dll/vhacd.asmdef.meta build/VHACD/vhacd.asmdef.meta
+        cd build
+        jar -cMf windows-x64.zip VHACD
       
     - name: make release
       uses: actions/create-release@v1.0.0
