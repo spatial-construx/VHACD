@@ -3,6 +3,20 @@ name: C/C++ CI
 on: [push]
 
 jobs:
+  create_release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: make release
+      uses: actions/create-release@v1.0.0
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        draft: true
+        tag_name: ${{ github.head_ref }}
+        release_name: build of ${{ github.sha }}
+
   build:
     strategy:
       matrix:
@@ -22,6 +36,8 @@ jobs:
             target_dll_name: "liblibvhacd.bundle"
 
     runs-on: ${{ matrix.platform }}
+    
+    needs: [create_release]
     
     steps:
     - uses: actions/checkout@v1
@@ -45,23 +61,13 @@ jobs:
         cp src/dll/vhacd.asmdef.meta build/VHACD/vhacd.asmdef.meta
         cd build
         jar -cMf ${{ matrix.platform }}.zip VHACD
-      
-    - name: make release
-      uses: actions/create-release@v1.0.0
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        draft: true
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
 
     - name: upload zip
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        upload_url: ${{ jobs.create_release.steps.create_release.outputs.upload_url }} 
         asset_path: ./build/${{ matrix.platform }}.zip
         asset_name: ${{ matrix.platform }}.zip
         asset_content_type: application/zip
