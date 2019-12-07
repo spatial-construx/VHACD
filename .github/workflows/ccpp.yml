@@ -10,7 +10,8 @@ jobs:
         include:
           - platform: windows-latest
             cmake_type: "Visual Studio 16 2019"
-          - cmake_type: "Unix Makefiles"
+          - platform: [ubuntu-latest, macos-latest]
+            cmake_type: "Unix Makefiles"
 
     runs-on: ${{ matrix.platform }}
     
