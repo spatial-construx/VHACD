@@ -10,14 +10,16 @@ jobs:
         include:
           - platform: windows-latest
             cmake_type: "Visual Studio 16 2019"
-            dll_name: "libvhacd.dll"
-            pdb_name: "libvhacd.pdb"
+            dll_name: "Debug/libvhacd.dll"
+            target_dll_name: "libvhacd.dll"
           - platform: ubuntu-latest
             cmake_type: "Unix Makefiles"
             dll_name: "liblibvhacd.so"
+            target_dll_name: "liblibvhacd.so"
           - platform: macos-latest
             cmake_type: "Unix Makefiles"
             dll_name: "liblibvhacd.dylib"
+            target_dll_name: "liblibvhacd.bundle"
 
     runs-on: ${{ matrix.platform }}
     
@@ -37,7 +39,7 @@ jobs:
       run: |
         mkdir build/VHACD
         ls build/dll
-        cp build/dll/Debug/${{ matrix.dll_name }} build/VHACD/${{ matrix.dll_name }}
+        cp build/dll/${{ matrix.dll_name }} build/VHACD/${{ matrix.target_dll_name }}
         cp src/dll/VHACD.cs build/VHACD/VHACD.cs
         cp src/dll/vhacd.asmdef build/VHACD/vhacd.asmdef
         cp src/dll/vhacd.asmdef.meta build/VHACD/vhacd.asmdef.meta
