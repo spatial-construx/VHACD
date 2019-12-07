@@ -12,7 +12,7 @@ jobs:
             cmake_type: "Visual Studio 16 2019"
           - platform: ubuntu-latest
             cmake_type: "Unix Makefiles"
-          - platform: ubuntu-latest
+          - platform: macos-latest
             cmake_type: "Unix Makefiles"
 
     runs-on: ${{ matrix.platform }}
@@ -25,7 +25,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -G ${{ format('"{0}"', matrix.cmake_type) }} ../src
+        cmake -G "${{ matrix.cmake_type }}" ../src
     - name: build
       run: cmake --build build --config Debug
       
