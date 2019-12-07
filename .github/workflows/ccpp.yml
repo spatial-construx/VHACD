@@ -17,7 +17,7 @@ jobs:
             dll_name: "liblibvhacd.so"
           - platform: macos-latest
             cmake_type: "Unix Makefiles"
-            dll_name: "liblibvhacd.so"
+            dll_name: "liblibvhacd.dylib"
 
     runs-on: ${{ matrix.platform }}
     
