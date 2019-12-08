@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   create_release:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     steps:
     - name: make release
@@ -74,7 +74,7 @@ jobs:
           
     - shell: bash
       run: |
-        value=`cat release-url.txt`
+        value=`cat release-url`
         echo The result is $value
 
 #     - name: upload zip
