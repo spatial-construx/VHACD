@@ -3,9 +3,47 @@ name: C/C++ CI
 on: [push]
 
 jobs:
-  build:
+  create_release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: make release
+      uses: actions/create-release@v1.0.0
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        draft: true
+        tag_name: ${{ github.ref }}
+        release_name: build of ${{ github.sha }}
 
-    runs-on: windows-latest
+    - run: echo "${{ steps.create_release.outputs.upload_url }}" > release-url.txt
+    - uses: actions/upload-artifact@v1
+      with:
+        name: release-url
+        path: release-url.txt
+
+  build:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - platform: windows-latest
+            cmake_type: "Visual Studio 16 2019"
+            dll_name: "Debug/libvhacd.dll"
+            target_dll_name: "libvhacd.dll"
+          - platform: ubuntu-latest
+            cmake_type: "Unix Makefiles"
+            dll_name: "liblibvhacd.so"
+            target_dll_name: "liblibvhacd.so"
+          - platform: macos-latest
+            cmake_type: "Unix Makefiles"
+            dll_name: "liblibvhacd.dylib"
+            target_dll_name: "liblibvhacd.bundle"
+
+    runs-on: ${{ matrix.platform }}
+    
+    needs: [create_release]
     
     steps:
     - uses: actions/checkout@v1
@@ -15,37 +53,37 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -G "Visual Studio 16 2019" ../src
+        cmake -G "${{ matrix.cmake_type }}" ../src
     - name: build
       run: cmake --build build --config Debug
       
     - name: archive build
       run: |
         mkdir build/VHACD
-        cp build/dll/Debug/libvhacd.dll build/VHACD/libvhacd.dll
-        cp build/dll/Debug/libvhacd.pdb build/VHACD/libvhacd.pdb
+        ls build/dll
+        cp build/dll/${{ matrix.dll_name }} build/VHACD/${{ matrix.target_dll_name }}
         cp src/dll/VHACD.cs build/VHACD/VHACD.cs
         cp src/dll/vhacd.asmdef build/VHACD/vhacd.asmdef
         cp src/dll/vhacd.asmdef.meta build/VHACD/vhacd.asmdef.meta
         cd build
-        jar -cMf windows-x64.zip VHACD
-      
-    - name: make release
-      uses: actions/create-release@v1.0.0
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        jar -cMf ${{ matrix.platform }}.zip VHACD
+        
+    - uses: actions/download-artifact@v1
       with:
-        draft: true
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+          name: release-url
+          
+    - shell: bash
+      id: get_release_url
+      run: |
+        value=`cat release-url/release-url.txt`
+        echo ::set-output name=release_url::$value
 
     - name: upload zip
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./build/windows-x64.zip
-        asset_name: windows-x64.zip
+        upload_url: ${{ steps.get_release_url.outputs.release_url }}
+        asset_path: ./build/${{ matrix.platform }}.zip
+        asset_name: ${{ matrix.platform }}.zip
         asset_content_type: application/zip
