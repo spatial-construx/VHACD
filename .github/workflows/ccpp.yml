@@ -14,7 +14,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         draft: true
-        tag_name: ${{ github.head_ref }}
+        tag_name: ${{ github.ref }}
         release_name: build of ${{ github.sha }}
 
     - run: echo ${{ steps.create_release.outputs.upload_url }} > release-url.txt
