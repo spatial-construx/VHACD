@@ -17,7 +17,7 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: build of ${{ github.sha }}
 
-    - run: echo ${{ steps.create_release.outputs.upload_url }} > release-url.txt
+    - run: echo "${{ steps.create_release.outputs.upload_url }}" > release-url.txt
     - uses: actions/upload-artifact@v1
       with:
         name: release-url
