@@ -71,6 +71,7 @@ jobs:
       
     - name: archive build
       run: |
+        mkdir build
         mkdir build/VHACD
         cp ubuntu-latest/liblibvhacd.so build/VHACD/liblibvhacd.so
         cp macos-latest/liblibvhacd.dylib build/VHACD/liblibvhacd.dylib
