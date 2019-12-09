@@ -3,25 +3,6 @@ name: C/C++ CI
 on: [push]
 
 jobs:
-  create_release:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: make release
-      uses: actions/create-release@v1.0.0
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        draft: true
-        tag_name: ${{ github.ref }}
-        release_name: build of ${{ github.sha }}
-
-    - run: echo "${{ steps.create_release.outputs.upload_url }}" > release-url.txt
-    - uses: actions/upload-artifact@v1
-      with:
-        name: release-url
-        path: release-url.txt
 
   build:
     strategy:
@@ -43,8 +24,6 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     
-    needs: [create_release]
-    
     steps:
     - uses: actions/checkout@v1
     - uses: ilammy/msvc-dev-cmd@v1.0.0
@@ -56,34 +35,58 @@ jobs:
         cmake -G "${{ matrix.cmake_type }}" ../src
     - name: build
       run: cmake --build build --config Debug
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.platform }}
+        path: build/dll/${{ matrix.dll_name }}
+
+  create_release:
+    runs-on: ubuntu-latest
+    
+    needs: [build]
+    
+    steps:
+    - name: make release
+      uses: actions/create-release@v1.0.0
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        draft: true
+        tag_name: ${{ github.ref }}
+        release_name: build of ${{ github.sha }}
+        
+    - uses: actions/download-artifact@v1
+      with:
+          name: ubuntu-latest
+        
+    - uses: actions/download-artifact@v1
+      with:
+          name: windows-latest
+        
+    - uses: actions/download-artifact@v1
+      with:
+          name: macos-latest
       
     - name: archive build
       run: |
         mkdir build/VHACD
-        ls build/dll
-        cp build/dll/${{ matrix.dll_name }} build/VHACD/${{ matrix.target_dll_name }}
+        cp ubuntu-latest/liblibvhacd.so build/VHACD/liblibvhacd.so
+        cp macos-latest/liblibvhacd.dylib build/VHACD/liblibvhacd.dylib
+        cp windows-latest/libvhacd.dll build/VHACD/libvhacd.dll
         cp src/dll/VHACD.cs build/VHACD/VHACD.cs
         cp src/dll/vhacd.asmdef build/VHACD/vhacd.asmdef
         cp src/dll/vhacd.asmdef.meta build/VHACD/vhacd.asmdef.meta
         cd build
-        jar -cMf ${{ matrix.platform }}.zip VHACD
-        
-    - uses: actions/download-artifact@v1
-      with:
-          name: release-url
-          
-    - shell: bash
-      id: get_release_url
-      run: |
-        value=`cat release-url/release-url.txt`
-        echo ::set-output name=release_url::$value
+        jar -cMf VHACD.zip VHACD
 
     - name: upload zip
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.get_release_url.outputs.release_url }}
-        asset_path: ./build/${{ matrix.platform }}.zip
-        asset_name: ${{ matrix.platform }}.zip
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/VHACD.zip
+        asset_name: VHACD.zip
         asset_content_type: application/zip
