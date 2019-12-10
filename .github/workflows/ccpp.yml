@@ -79,6 +79,9 @@ jobs:
         cp src/dll/VHACD.cs build/VHACD/VHACD.cs
         cp src/dll/vhacd.asmdef build/VHACD/vhacd.asmdef
         cp src/dll/vhacd.asmdef.meta build/VHACD/vhacd.asmdef.meta
+        cp src/dll/liblibvhacd.so.meta build/VHACD/liblibvhacd.so.meta
+        cp src/dll/liblibvhacd.dylib.meta build/VHACD/liblibvhacd.dylib.meta
+        cp src/dll/libvhacd.dll.meta build/VHACD/libvhacd.dll.meta
         cd build
         jar -cMf VHACD.zip VHACD
 
