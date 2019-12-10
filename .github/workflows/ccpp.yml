@@ -71,7 +71,11 @@ jobs:
       with:
           name: macos-latest
       
-    - name: archive build
+    - uses: pCYSl5EDgo/setup-unity@master
+      with:
+        unity-version: 2019.2.13f1
+
+    - name: create unitypackage
       run: |
         mkdir build
         mkdir build/VHACD
@@ -85,14 +89,16 @@ jobs:
         cp src/dll/liblibvhacd.dylib.meta build/VHACD/liblibvhacd.dylib.meta
         cp src/dll/libvhacd.dll.meta build/VHACD/libvhacd.dll.meta
         cd build
-        jar -cMf VHACD.zip VHACD
+        /opt/Unity/Editor/Unity -quit -batchMode -logFile -noGraphics -createProject unity_project
+        mv VHACD unity_project/VHACD
+        /opt/Unity/Editor/Unity -quit -batchMode -logFile -noGraphics -projectPath unity_project -exportPackage VHACD VHACD.unitypackage
 
-    - name: upload zip
+    - name: upload unitypackage
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/VHACD.zip
-        asset_name: VHACD.zip
-        asset_content_type: application/zip
+        asset_path: ./build/VHACD.unitypackage
+        asset_name: VHACD.unitypackage
+        asset_content_type: application/octet-stream
