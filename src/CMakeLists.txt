@@ -7,6 +7,7 @@ message("NO_OPENCL " ${NO_OPENCL})
 message("NO_OPENMP " ${NO_OPENMP})
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 #set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/output" CACHE PATH "project install prefix" FORCE)
 set(CMAKE_COMMON_INC "${CMAKE_SOURCE_DIR}/../scripts/cmake_common.cmake")
