@@ -89,9 +89,9 @@ jobs:
         cp src/dll/liblibvhacd.dylib.meta build/VHACD/liblibvhacd.dylib.meta
         cp src/dll/libvhacd.dll.meta build/VHACD/libvhacd.dll.meta
         cd build
-        /opt/Unity/Editor/Unity -quit -batchMode -logFile -noGraphics -createProject unity_project
+        /opt/Unity/Editor/Unity -quit -batchMode -logFile -noGraphics -force-free -createProject unity_project
         mv VHACD unity_project/VHACD
-        /opt/Unity/Editor/Unity -quit -batchMode -logFile -noGraphics -projectPath unity_project -exportPackage VHACD VHACD.unitypackage
+        /opt/Unity/Editor/Unity -quit -batchMode -logFile -noGraphics -force-free -projectPath unity_project -exportPackage VHACD VHACD.unitypackage
 
     - name: upload unitypackage
       uses: actions/upload-release-asset@v1.0.1
