@@ -1,6 +1,6 @@
 # VHACD
 
-[![License](https://img.shields.io/badge/license-BSD--3-green.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE.md)
 ![Unity](https://img.shields.io/badge/unity-2020.2+-brightgreen)
 
 ---
@@ -70,4 +70,4 @@ For feature requests, bugs, or other issues, please file a [GitHub issue](https:
 Visit the [Robotics Hub](https://github.com/Unity-Technologies/Unity-Robotics-Hub) for more tutorials, tools, and information on robotics simulation in Unity!
 
 ## License
-[BSD 3-Clause](LICENSE)
+[Apache 2.0](LICENSE)
