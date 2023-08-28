@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+set(CMAKE_OSX_ARCHITECTURES=arm64;x86_64)
 project(VHACD)
 option(NO_OPENCL "NO_OPENCL" OFF)
 option(NO_OPENMP "NO_OPENMP" OFF)
