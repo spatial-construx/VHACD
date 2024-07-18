@@ -145,7 +145,7 @@ namespace MeshProcess
 
         public Parameters m_parameters;
 
-        public VHACD() { m_parameters.Init(); }
+        public ScriptVHACD() { m_parameters.Init(); }
 
         public unsafe List<Mesh> GenerateConvexMeshes(Mesh mesh)
         {

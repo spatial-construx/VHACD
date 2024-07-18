@@ -168,7 +168,7 @@ namespace MeshProcess
 
         public Parameters m_parameters;
 
-        public VHACD() { m_parameters.Init(); }
+        public MonoVHACD() { m_parameters.Init(); }
 
         [ContextMenu("Generate Convex Meshes")]
         private void GenerateConvexMeshesButton()
