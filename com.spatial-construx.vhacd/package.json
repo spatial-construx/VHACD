@@ -1,0 +1,9 @@
+{
+  "name": "com.spatial-construx.vhacd",
+  "version": "1.0.0",
+  "displayName": "VHACD",
+  "description": "Use convex hull decomposition to convert concave meshes to convex meshes, which are sometimes necessary in Unity for features like triggers.",
+  "license": "See `LICENSE.md` file",
+  "unity": "2020.3",
+  "unityRelease": "19f1"
+}

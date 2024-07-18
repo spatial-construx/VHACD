@@ -5,11 +5,7 @@
 
 ---
 
-We're currently working on lots of things! Please take a short moment fill out our [survey](https://unitysoftware.co1.qualtrics.com/jfe/form/SV_0ojVkDVW0nNrHkW) to help us identify what products and packages to build next.
-
----
-
-## The V-HACD library decomposes a 3D surface into a set of "near" convex parts.
+### The V-HACD library decomposes a 3D surface into a set of "near" convex parts.
 
 ![Approximate convex decomposition of "Camel"](https://github.com/kmammou/v-hacd/raw/master/doc/acd.png)
 
@@ -23,7 +19,7 @@ We're currently working on lots of things! Please take a short moment fill out o
 3. Enter the git URL for the desired package. Note: you can append a version tag to the end of the git url, like `#v0.4.0` or `#v0.5.0`, to declare a specific package version, or exclude the tag to get the latest from the package's `main` branch.
 
     ```
-    https://github.com/Unity-Technologies/VHACD.git?path=/com.unity.robotics.vhacd
+    https://github.com/spatial-construx/VHACD.git?path=/com.spatial-construx.vhacd
     ```
 
 4. Click `Add`.
