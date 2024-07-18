@@ -7,6 +7,3 @@ CMakeFiles
 **/.DS_Store
 **/.vscode/
 **/.idea/
-
-# Ignore Unity .meta files
-**/*.meta
